@@ -3,15 +3,13 @@
 @REM ファイル移動&クリップボードへコピーするtool
 @REM 親ディレクトリにあるファイルをターゲットに設定して自由にファイル移動が可能
 @REM Japanese (Shift JIS) で保存
-@REM ネットワーク系であれば %cd% を  %~dp0に変更
 @REM ############################################################################
-
 
 @REM cls
 @echo off
 chcp 932 >nul
 setlocal enabledelayedexpansion
-@REM pushd "%~dp0"
+pushd "%~dp0"
 
 
 @REM ========================
@@ -33,8 +31,7 @@ if "%~1"=="" (
 set "targets=001 002 005 斎藤"
 set counts=0
 
-@REM ネットワーク系であれば%~dp0を削除
-for /d %%T in ("%~dp0..\*") do ( 
+for /d %%T in ("..\*") do ( 
     echo "%%~fT" | findstr /i "%targets%" >nul
     if !errorlevel! equ 0 (
         set /a counts+=1
@@ -86,8 +83,7 @@ for %%F in (%*) do (
         robocopy "%%~F" "!transpath!\!transfile!" /move /e /ndl /np /njs /njh /nfl
         echo "!transfile!"
     ) else (
-        @REM ネットワーク系であれば%~dp0.に変更
-        robocopy "%cd%" "!transpath!" "!transfile!" /mov /ndl /np /njs /njh /nfl
+        robocopy "%~dp0." "!transpath!" "!transfile!" /mov /ndl /np /njs /njh /nfl
         echo "!transfile!"
     )   
 )
@@ -95,8 +91,8 @@ echo ========================
 echo "!transname!"へ転送しました
 
 
-@REM ネットワーク系であれば%~dp0に変更
-set "clipboard=%cd%\clip.txt"
+
+set "clipboard=%~dp0\clip.txt"
 if exist "!clipboard!" del "!clipboard!" 2>nul
 for %%c in (%*) do (
     set "filename=%%~nxc"
