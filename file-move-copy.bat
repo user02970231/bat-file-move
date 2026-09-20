@@ -1,8 +1,7 @@
 @REM ############################################################################
-@REM Windows日本語環境用
-@REM ファイル移動&クリップボードへコピーするtool
-@REM 親ディレクトリにあるファイルをターゲットに設定して自由にファイル移動が可能
-@REM Japanese (Shift JIS) で保存
+@REM Tool for moving files and copying to the clipboard
+@REM You can freely move files by setting a file in the parent directory as the target.
+@REM Japanese (Shift JIS) 
 @REM ############################################################################
 
 @REM cls
@@ -13,21 +12,21 @@ pushd "%~dp0"
 
 
 @REM ========================
-@REM ファイルチェック
+@REM file check
 @REM ========================
 if "%~1"=="" (
-    echo ファイルが指定されていません。ファイルをドロップしてください。
-    echo 終了するには何かキーを押してください。
+    echo No file has been specified. Please drop a file.
+    echo Press any key to exit.
     pause >nul
     exit /b
 )
 
 
 @REM ========================
-@REM ペースト先ターゲットファイル(数字や名前などに対応)
+@REM target file
 @REM ========================
 
-:: ターゲット設定
+:: Target Setting
 set "targets=001 002 005 斎藤"
 set counts=0
 
@@ -40,18 +39,18 @@ for /d %%T in ("..\*") do (
     )
 )
 if %counts%==0 (
-    echo 送り先のフォルダーが見つかりませんでした。
+    echo The destination folder was not found.
     pause >nul
     exit /b
 )
 
 
 @REM ========================
-@REM 送り先の選択処理
+@REM Recipient selection process
 @REM ========================
 set "fcount="
 echo ========================
-echo 送り先を選択してください。
+echo Please select a recipient.
 echo ========================
 for /l %%c in (1,1,%counts%) do (
     echo %%c : !fname[%%c]!
@@ -59,7 +58,7 @@ for /l %%c in (1,1,%counts%) do (
 )
 echo ========================
 
-choice /c !fcount! /n /m "送り先の番号を入力してください"
+choice /c !fcount! /n /m "Please enter the recipient's number."
 
 set "transname=!fname[%errorlevel%]!"
 set "transpath=!fpath[%errorlevel%]!"
@@ -70,7 +69,7 @@ set "transpath=!fpath[%errorlevel%]!"
 
 
 @REM ========================
-@REM 移動処理 & フォルダ名のコピー
+@REM Move Operation & Copy Folder Name
 @REM ========================
 
 echo ========================
@@ -88,7 +87,7 @@ for %%F in (%*) do (
     )   
 )
 echo ========================
-echo "!transname!"へ移動しました
+echo "!transname!" moved
 
 
 
@@ -100,5 +99,5 @@ for %%c in (%*) do (
 )
 clip < !clipboard!
 del !clipboard!
-echo ファイル名をクリップボードにコピーしました！
+echo The file name has been copied to the clipboard!
 pause
